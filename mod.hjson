@@ -1,0 +1,12 @@
+name: johnting-mod
+displayName: JohnTing Mod
+author: "[accent]JohnTing"
+description:
+    '''
+    The author is not good at naming.
+    Increases zooming range.
+    Add a add button to logic Canvas.
+    '''
+version: 0.1
+minGameVersion: 126.2
+hidden: true
