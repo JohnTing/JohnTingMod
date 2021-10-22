@@ -1,77 +1,65 @@
 
-Events.on(ClientLoadEvent, main);
+const health = require("health");
+const changer = require("teamChanger");
+const logicButton = require("logicButton");
 
 
-function main() {
-    Vars.renderer.minZoom = 0.5;
-    Vars.renderer.maxZoom = 20;
-    Vars.experimental = true;
-    Vars.enableConsole = true;
+if (!Vars.headless) { //Now this is what I call inefficient hell.
+    let initialized = false;
 
-    // LStatements.GetLinkStatement.output = "block1";
+    let change = new Table().top().left();
 
-    function addButtonDialog(statementElem) {
-        var dialog = new BaseDialog("@add");
+    Events.on(ClientLoadEvent, () => {
+        changer.add(change);
+        Vars.ui.hudGroup.addChild(change);
 
-        dialog.cont.pane(t2 => {
-            t2.background(Tex.button);
-            var i = 0;
-            for (let j = 0; j < LogicIO.allStatements.size; j++) {
-                let prov = LogicIO.allStatements.get(j);
-                let example = prov.get();
-                if (example instanceof LStatements.InvalidStatement || example.hidden()) continue;
+        Vars.renderer.minZoom = 0.5;
+        Vars.renderer.maxZoom = 20;
+        Vars.experimental = true;
+        Vars.enableConsole = true;
 
-                let style = new TextButton.TextButtonStyle(Styles.cleart);
-                style.fontColor = example.color();
-                style.font = Fonts.outline;
+        Vars.ui.logic.shown(() => {
+            logicButton.addbutton();
+        });
+        
 
-                t2.button(example.name(), style, () => {
-                    Vars.ui.logic.canvas.add(prov.get());
+        Events.on(WorldLoadEvent, () => {
+            if (!initialized) {
+                let m = Vars.mobile;
+                // let healthUI = Vars.ui.hudGroup.children.get(5).children.get(m ? 2 : 0).children.get(0).children.get(0).children.get(0);
+                let healthUI = Vars.ui.hudGroup.children.get(5).children.get(m ? 2 : 0).children.get(0).children.get(0);
+                healthUI.row();
+                healthUI.add(health.health()).size(300, 20).color(Pal.health).pad(0).left().padLeft(0);
+                healthUI.row();
+                healthUI.add(health.shield()).size(300, 20).color(Pal.accent).pad(0).left().padLeft(0);
+                initialized = true;
 
-                    let index = Vars.ui.logic.canvas.statements.getChildren().indexOf(statementElem, true) + 1;
 
-                    let last = Vars.ui.logic.canvas.statements.getChildren().size - 1;
-                    let myElem = Vars.ui.logic.canvas.statements.getChildren().remove(last);
-                    addButtonIcon(myElem);
-                    Vars.ui.logic.canvas.statements.getChildren().insert(index, myElem);
+                if (!m) {
+                    let minimapUI = Vars.ui.hudGroup.children.get(2);
+                    /*
+                    Vars.ui.hudGroup.children.get(2).children.get(0).children.get(0).setSize(Scl.scl(280));
+                    Vars.ui.hudGroup.children.get(2).children.get(0).setSize(Scl.scl(280));
+                    
+                    Vars.ui.hudGroup.children.get(2).children.get(0).setPosition(20, 20);
 
-                    dialog.hide();
-                }).size(140, 50);
-                if (++i % 2 == 0) t2.row();
+                    Vars.ui.hudGroup.children.get(2).setSize(Scl.scl(280));
+                    Vars.ui.hudGroup.children.get(2).top().right();*/
+
+                    minimapUI.row();
+                    minimapUI.label(()=> { return "(" + Math.round(Core.input.mouseWorldX()/8) + "," + Math.round(Core.input.mouseWorldY()/8) + ")"; });
+                    // ;
+                }
+                
+
+
             }
         });
-        dialog.addCloseButton();
-        dialog.show();
-    }
-
-    function addButtonIcon(statementElem) {
-        // Vars.ui.logic.canvas.statements.getChildren().get(0).getChildren().get(0).getChildren().size
-        if(statementElem.getChildren().get(0).getChildren().size >= 4) {
-            return;
-        }
-
-        let table = statementElem.getChildren().get(0);
-        table.button(Icon.add, Styles.logici, () => {
-            addButtonDialog(statementElem);
-
-        }).size(24).padRight(6);
-
-        let last = table.getCells().size - 1;
-        table.getCells().swap(last - 1, last);
-        table.getCells().swap(last - 2, last - 1);
-    }
-
-    function addButtonCanvas() {
-        let statementElems = Vars.ui.logic.canvas.statements.getChildren();
-        for (let i = 0; i < statementElems.size; i++) {
-
-            let statementElem = statementElems.get(i);
-            addButtonIcon(statementElem);
-
-        }
-    }
-
-    Vars.ui.logic.shown(() => {
-        addButtonCanvas();
     });
-};
+}
+
+
+
+
+
+
