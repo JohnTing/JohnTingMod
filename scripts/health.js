@@ -14,7 +14,7 @@ function shieldBar() {
 
     let b = new Bar();
     b.set(() => {
-        return "shield: " + (Vars.player.unit() ? Math.round(Vars.player.unit().shield) + " (" + Vars.player.unit().armor + ")" : "0 (0)");
+        return "Shield: " + (Vars.player.unit() ? Math.round(Vars.player.unit().shield) + " (" + Vars.player.unit().armor + ")" : "0 (0)");
         }, () => {
             return Vars.player.unit() ? Vars.player.unit().shield / Vars.player.unit().maxHealth : 0.0;
         }, Color.gray);
