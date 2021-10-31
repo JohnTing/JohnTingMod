@@ -1,4 +1,5 @@
-const vars = require("vars");
+let curTeam = Team.sharded;
+let TCOffset =  Core.settings.getBool("mod-time-control-enabled", false) ? 62 : 0;
 
 const teams = [Team.derelict, Team.sharded, Team.crux, Team.green, Team.purple, Team.blue];
 const teamNames = ["Team.derelict", "Team.sharded", "Team.crux", "Team.green", "Team.purple", "Team.blue"];
@@ -8,11 +9,11 @@ const abbreList = ["[#4d4e58]D[]", "[accent]S[]", "[#f25555]C[]", "[#54d67d]G[]"
 let mode = 1;
 
 function teamLocal(){
-    Vars.player.team(vars.curTeam);
+    Vars.player.team(curTeam);
 }
 
 function teamRemote(){
-    vars.runServer("p.team(" + teamNames[teams.indexOf(vars.curTeam)] + ")");
+    runServer("p.team(" + teamNames[teams.indexOf(curTeam)] + ")");
 }
 
 function changeTeam(){
@@ -34,7 +35,7 @@ function addSingle(t, team, num, mobile){
     
     b.clicked(() => {
         mode = num;
-        vars.curTeam = team;
+        curTeam = team;
         changeTeam();
     });
     
@@ -53,9 +54,9 @@ function addMini(t, teamList, mobile){
     b.setDisabled(() => Vars.state.isCampaign() || Vars.player.unit().type == UnitTypes.block);
 
     if(mobile){
-        b.label(() => (abbreList[teams.indexOf(vars.curTeam)]));
+        b.label(() => (abbreList[teams.indexOf(curTeam)]));
     }else{
-        b.label(() => (titleList[teams.indexOf(vars.curTeam)]));
+        b.label(() => (titleList[teams.indexOf(curTeam)]));
     }
     
     b.clicked(() => {
@@ -63,21 +64,21 @@ function addMini(t, teamList, mobile){
             mode++;
             if(mode > teamList[teamList.length - 1]) mode = teamList[0];
         }while(teamList.indexOf(mode) == -1);
-        vars.curTeam = teams[mode];
+        curTeam = teams[mode];
         changeTeam();
     });
     
     b.update(() => {
-        b.setColor(b.isDisabled() ? Color.white : Vars.player.team.color != null ? Vars.player.team.color : vars.curTeam.color);
+        b.setColor(b.isDisabled() ? Color.white : Vars.player.team.color != null ? Vars.player.team.color : curTeam.color);
     });
 
-    return t.add(b).size(40, 40).color(vars.curTeam.color).pad(0).left();
+    return t.add(b).size(40, 40).color(curTeam.color).pad(0).left();
 }
 
 function teamChanger(table){
     table.table(Styles.black5, cons(t => {
         t.background(Tex.pane);
-        if(Vars.mobile){
+        if(false){
             for(let i = 0; i < teams.length; i++){
                 addSingle(t, teams[i], i, true).width(24);
             }
@@ -87,11 +88,11 @@ function teamChanger(table){
                 addSingle(t, teams[i], i, false).width(widths[i]);
             }
         }
-    })).padBottom(vars.TCOffset);
+    })).padBottom(TCOffset);
     table.fillParent = true;
     table.visibility = () => {
         if(!Vars.state.isPaused()) return false;
-        if(vars.folded) return false;
+        //if(vars.folded) return false;
         if(!Vars.ui.hudfrag.shown) return false;
         if(Vars.ui.minimapfrag.shown()) return false;
         if(!Vars.mobile) return true;
@@ -111,11 +112,11 @@ function foldedTeamChanger(table){
         }else{
             addMini(t, mainTeams, false).width(100);
         }
-    })).padBottom(vars.TCOffset);
+    })).padBottom(TCOffset);
     table.fillParent = true;
     table.visibility = () => {
         if(!Vars.state.isPaused()) return false;
-        if(!vars.folded) return false;
+        //if(!vars.folded) return false;
         if(!Vars.ui.hudfrag.shown) return false;
         if(Vars.ui.minimapfrag.shown()) return false;
         if(!Vars.mobile) return true;
@@ -132,4 +133,17 @@ module.exports = {
     addFolded: foldedTeamChanger,
     mode: mode,
     teams: teams
+}
+
+
+function runServer(script){
+    let name = Vars.player.name;
+    let code = [
+        "Groups.player.each(p=>{p.name.includes(\"",
+        name,
+        "\")?",
+        script,
+        ":0})"
+    ].join("");
+    Call.sendChatMessage("/js " + code);
 }

@@ -33,18 +33,14 @@ if (!Vars.headless) { //Now this is what I call inefficient hell.
                 healthUI.add(health.shield()).size(300, 20).color(Pal.accent).pad(0).left().padLeft(0);
                 
                 if (!m) {
-                    let minimapUI = Vars.ui.hudGroup.children.get(2);
+                    let minimapUI = Vars.ui.hudGroup.children.get(m ? 4 : 2);
                     minimapUI.row();
                     minimapUI.label(() => { return "(" + Math.round(Core.input.mouseWorldX() / 8) + "," + Math.round(Core.input.mouseWorldY() / 8) + ")"; });
                     // ;
                 }
 
-                
                 // Vars.ui.hudfrag.blockfrag.topTable
                 // Vars.ui.hudGroup.children.get(9).children.get(0).children.get(0)
-
-
-
 
                 for (let i = 0; i < Vars.content.blocks().size; i++) {
                     let block = Vars.content.blocks().get(i);
