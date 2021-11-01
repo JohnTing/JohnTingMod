@@ -7,7 +7,7 @@ const mydraw = require("mydraw");
 if (!Vars.headless) { //Now this is what I call inefficient hell.
     let initialized = false;
 
-    let change = new Table().top().left();
+    let change = new Table().buttom().left();
     Events.on(ClientLoadEvent, () => {
         changer.add(change);
         Vars.ui.hudGroup.addChild(change);
