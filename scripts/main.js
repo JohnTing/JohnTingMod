@@ -31,7 +31,7 @@ if (!Vars.headless) { //Now this is what I call inefficient hell.
                 healthUI.add(health.health()).size(300, 20).color(Pal.health).pad(0).left().padLeft(0);
                 healthUI.row();
                 healthUI.add(health.shield()).size(300, 20).color(Pal.accent).pad(0).left().padLeft(0);
-                
+
                 if (!m) {
                     let minimapUI = Vars.ui.hudGroup.children.get(m ? 4 : 2);
                     minimapUI.row();
@@ -39,7 +39,9 @@ if (!Vars.headless) { //Now this is what I call inefficient hell.
                     // ;
                 }
 
-                // Vars.ui.hudfrag.blockfrag.topTable
+
+                // Vars.ui.hudfrag.blockf
+                //ag.topTable
                 // Vars.ui.hudGroup.children.get(9).children.get(0).children.get(0)
 
                 for (let i = 0; i < Vars.content.blocks().size; i++) {
@@ -52,10 +54,10 @@ if (!Vars.headless) { //Now this is what I call inefficient hell.
                         UI.formatBar(entity.maxHealth() * state.rules.blockHealthMultiplier)),
                     () => Pal.health,
                     () => 0.5));*/
-                    block.bars.add("health",e => new Bar(
-                        () => { return Core.bundle.format("stat.health") + ": " + Math.round(e.health) + "/" + e.maxHealth;}, 
-                        () => { return Pal.health;}, 
-                        () => { return e.healthf();}
+                    block.bars.add("health", e => new Bar(
+                        () => { return Core.bundle.format("stat.health") + ": " + Math.round(e.health) + "/" + e.maxHealth; },
+                        () => { return Pal.health; },
+                        () => { return e.healthf(); }
                     ));
                 }
 
