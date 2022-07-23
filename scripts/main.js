@@ -90,13 +90,14 @@ if (!Vars.headless) { //Now this is what I call inefficient hell.
                 healthUI.row();
                 healthUI.add(health.shield()).size(300, 20).color(Pal.accent).pad(0).left().padLeft(0);
 
+                /*
                 let minimapUI = Vars.ui.hudGroup.find(boolf(e=>{return e.name == 'minimap/position'}))
                 minimapUI.row();
                 minimapUI.label(() => { return "(" + Math.round(Core.input.mouseWorldX() / 8) + "," + Math.round(Core.input.mouseWorldY() / 8) + ")"; })
                 .visible(() => Core.settings.getBool("position") || Core.settings.getBool("mouseposition"))
                 .touchable(Touchable.disabled)
                 .style(Styles.outlineLabel);
-
+                */
 
                 /*
                 
