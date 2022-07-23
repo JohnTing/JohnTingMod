@@ -45,7 +45,7 @@ function draw() {
 
                     // Vars.player.unit().type.weapons.get(0).bullet.range()
 
-                    Lines.dashCircle(player.x, player.y, weapon.bullet.range());
+                    Lines.dashCircle(player.x, player.y, weapon.bullet.range);
 
                 }
             }
@@ -69,7 +69,7 @@ function draw() {
                 Draw.alpha(0.5);
                 for (let i = 0; i < unittype.weapons.size; i++) {
                     let weapon = unittype.weapons.get(i);
-                    Lines.dashCircle(unit.x, unit.y, weapon.bullet.range());
+                    Lines.dashCircle(unit.x, unit.y, weapon.bullet.range);
                 }
             }
         }
