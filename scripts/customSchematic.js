@@ -20,6 +20,12 @@ function apply() {
 
         const custominfo =  createCustominfo();
 
+        // Vars.ui.schematics.info
+        /*
+        Vars.ui.schematics.released(() => {
+            logicButton.addbutton();
+        });*/
+        
         Vars.ui.schematics = extend(SchematicsDialog, {
             showInfo(schem) {
                 custominfo.showSchem(schem);
@@ -144,6 +150,8 @@ function createCustominfo() {
 
             this.cont.add(Core.bundle.format("schematic.info", schem.width, schem.height, schem.tiles.size)).color(Color.lightGray);
             this.cont.row();
+            // this.cont.table(cons(tags => buildTags(schem, tags))).fillX().left().row();
+            // this.cont.row();
             this.cont.add(new SchematicsDialog.SchematicImage(schem)).maxSize(800);
             this.cont.row();
 
@@ -247,6 +255,97 @@ function getIcon(id) {
     }
     return Icon.paste;
 }
+
+
+
+
+
+function buildTags(schem, t){
+    buildTags(schem, t, true);
+}
+
+function buildTags(schem, t, name){
+    const tagh = 42;
+
+    t.clearChildren();
+    t.left();
+
+    //sort by order in the main target array. the complexity of this is probably awful
+    schem.labels.sort(floatf(s => tags.indexOf(s)));
+
+    if(name) t.add("@schematic.tags").padRight(4);
+    t.pane(s => {
+        s.left();
+        s.defaults().pad(3).height(tagh);
+        for(let i = 0;i < schem.labels.length;i++){
+            tag = schem.labels.get(i);
+            s.table(Tex.button, i => {
+                i.add(tag).padRight(4).height(tagh).labelAlign(Align.center);
+                i.button(Icon.cancelSmall, Styles.emptyi, () => {
+                    removeTag(schem, tag);
+                    buildTags(schem, t, name);
+                }).size(tagh).padRight(-9).padLeft(-9);
+            });
+        }
+
+    }).fillX().left().height(tagh).scrollY(false);
+
+    t.button(Icon.addSmall, () => {
+        var dialog = new BaseDialog("@schematic.addtag");
+        dialog.addCloseButton();
+        dialog.cont.pane(p => dialog.resized(true, () => {
+            p.clearChildren();
+
+            let sum = 0;
+            let current = new Table().left();
+            for(var tag of tags){
+                if(schem.labels.contains(tag)) continue;
+
+                var next = Elem.newButton(tag, () => {
+                    addTag(schem, tag);
+                    buildTags(schem, t, name);
+                    dialog.hide();
+                });
+                next.getLabel().setWrap(false);
+
+                next.pack();
+                let w = next.getPrefWidth() + Scl.scl(6);
+
+                if(w + sum >= Core.graphics.getWidth() * (Core.graphics.isPortrait() ? 1 : 0.8)){
+                    p.add(current).row();
+                    current = new Table();
+                    current.left();
+                    current.add(next).height(tagh).pad(2);
+                    sum = 0;
+                }else{
+                    current.add(next).height(tagh).pad(2);
+                }
+
+                sum += w;
+            }
+
+            if(sum > 0){
+                p.add(current).row();
+            }
+
+            var handleTag = res => {
+                dialog.hide();
+                addTag(schem, res);
+                buildTags(schem, t, name);
+            };
+
+            p.row();
+
+            p.table(v => {
+                v.left().defaults().fillX().height(tagh).pad(2);
+                v.button("@schematic.texttag", Icon.add, () => showNewTag(handleTag)).wrapLabel(false).get().getLabelCell().padLeft(4);
+                v.button("@schematic.icontag", Icon.add, () => showNewIconTag(handleTag)).wrapLabel(false).get().getLabelCell().padLeft(4);
+            });
+        }));
+        dialog.show();
+    }).size(tagh).tooltip("@schematic.addtag");
+}
+
 
 
 

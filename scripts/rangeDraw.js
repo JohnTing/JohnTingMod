@@ -1,3 +1,9 @@
+// draw
+function apply() {
+    Events.run(Trigger.draw, () => {
+        Draw.draw(Layer.overlayUI, draw);
+    });
+}
 
 function draw() {
 
@@ -141,7 +147,7 @@ function closestEnemyOverlap(team, x, y, range, predicate) {
 
 
 module.exports = {
-    draw: draw,
+    apply: apply,
 
 }
 

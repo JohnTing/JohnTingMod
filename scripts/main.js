@@ -2,11 +2,11 @@
 const health = require("health");
 // const changer = require("teamChanger");
 const logicButton = require("logicButton");
-const rangedraw = require("rangedraw");
+const rangeDraw = require("rangeDraw");
 const customSchematic = require("customSchematic");
 
-customSchematic.apply()
-
+customSchematic.apply();
+rangeDraw.apply();
 
 if (!Vars.headless) { //Now this is what I call inefficient hell.
     let initialized = false;
@@ -60,10 +60,7 @@ if (!Vars.headless) { //Now this is what I call inefficient hell.
 
 
 
-    // draw
-    Events.run(Trigger.draw, () => {
-        rangedraw.draw();
-    });
+
 }
 
 
