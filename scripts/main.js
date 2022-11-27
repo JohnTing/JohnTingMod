@@ -1,3 +1,4 @@
+// Here's a lot of code from https://github.com/Xeloboyo/PvP-Notifs
 
 // const changer = require("teamChanger");
 const logicButton = require("logicButton");
@@ -6,10 +7,7 @@ const customSchematic = require("customSchematic");
 const healthBar = require("healthBar");
 
 
-
-
 if (!Vars.headless) {
-
     customSchematic.apply();
     rangeDraw.apply();
     healthBar.apply();
