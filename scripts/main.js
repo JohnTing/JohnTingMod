@@ -7,16 +7,19 @@ const customSchematic = require("customSchematic");
 const healthBar = require("healthBar");
 
 
+
 if (!Vars.headless) {
     customSchematic.apply();
     rangeDraw.apply();
     healthBar.apply();
 
     Events.on(ClientLoadEvent, () => {
-
+        
         Vars.renderer.minZoom = 0.5;
         Vars.renderer.maxZoom = 20;
         Vars.experimental = true;
+        
+        
 
         Vars.ui.logic.shown(() => {
             logicButton.addbutton();
